@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import T1 from './pages/T1';
 import T2 from './pages/T2';
 import S1 from './pages/S1';
