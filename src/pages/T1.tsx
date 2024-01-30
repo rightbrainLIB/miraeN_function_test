@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Timeline,
   TimelineItem,
@@ -7,7 +7,18 @@ import {
   TimelineContent,
   TimelineDot,
 } from "@mui/lab";
-import { CircularProgress, Typography, Box, Stack } from "@mui/material/";
+import {
+  CircularProgress,
+  Typography,
+  Box,
+  Stack,
+  List,
+  ListItem,
+  ListItemIcon,
+  Divider,
+  Slide,
+  Zoom,
+} from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -31,8 +42,10 @@ ChartJS.register(
 );
 
 function T1() {
-  const duration = 60; // 총 지속 시간 (초)
+  const duration = 60;
   const [progress, setProgress] = useState(100);
+  const chartRef = useRef(null);
+  const [annotationY, setAnnotationY] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,8 +64,24 @@ function T1() {
     };
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (chartRef.current) {
+        setAnnotationY(() => {
+          const newY = 150;
+          return newY;
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const options = {
     responsive: true,
+    layout: {
+      padding: 20,
+    },
     plugins: {
       legend: {
         display: false,
@@ -61,23 +90,15 @@ function T1() {
         display: false,
       },
       annotation: {
-        annotations: [
-          {
-            borderColor: "black",
-            borderWidth: 3,
-            scaleID: "y",
-            value: 50,
-            label: {
-              display: true,
-              content: "line",
-              backgroundColor: "black",
-              borderWidth: 3,
-              width: 40,
-              height: 40,
-              position: "end",
-            },
+        annotations: {
+          line1: {
+            yMin: 50,
+            yMax: 50,
+            xMax: annotationY,
+            borderColor: "rgb(255, 99, 132)",
+            borderWidth: 2,
           },
-        ],
+        },
       },
     },
     scales: {
@@ -87,7 +108,10 @@ function T1() {
         },
       },
       y: {
+        beginAtZero: true,
         display: false,
+        max: 100,
+        min: 0,
         grid: {
           drawBorder: false,
           display: false,
@@ -218,8 +242,54 @@ function T1() {
         </Box>
       </Stack>
       <h2>학습시간 분석</h2>
-      <Stack sx={{ width: "300px" }}>
-        <Bar options={options} data={data} />;
+      <Stack sx={{ width: "300px", display: "flex", flexDirection: "row" }}>
+        <Bar options={options} data={data} ref={chartRef} />
+        <Box sx={{ marginLeft: 10 }}>
+          <List>
+            <ListItem sx={{ padding: 0 }}>
+              <Box sx={{ position: "relative" }}>
+                <Divider
+                  orientation="vertical"
+                  sx={{ width: 1, height: 50, borderRight: 0, borderLeft: 1 }}
+                />
+                <Box
+                  sx={{
+                    overflow: "hidden",
+                    height: 24,
+                    position: "relative",
+                    marginTop: -5,
+                  }}
+                >
+                  <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 10,
+                        width: 20,
+                        height: 30,
+                      }}
+                    >
+                      text
+                    </Box>
+                  </Slide>
+                </Box>
+                <Zoom in={true} mountOnEnter unmountOnExit>
+                  <ListItemIcon
+                    sx={{
+                      marginTop: 2,
+                      minWidth: 40,
+                      width: 40,
+                      height: 40,
+                      backgroundColor: "lightblue",
+                      borderRadius: "50%",
+                    }}
+                  ></ListItemIcon>
+                </Zoom>
+              </Box>
+            </ListItem>
+          </List>
+        </Box>
       </Stack>
     </>
   );
