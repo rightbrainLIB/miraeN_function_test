@@ -10,6 +10,10 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 
+import imgs from "../img/stripe.jpg"
+const stripe = new Image();
+stripe.src = imgs;
+
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -28,8 +32,6 @@ function createRadialGradient3(context:any) {
     const chartWidth = chartArea.right - chartArea.left;
     const chartHeight = chartArea.bottom - chartArea.top;
 
-    const width = chartWidth;
-    const height = chartHeight;
     const centerX = (chartArea.left + chartArea.right) / 2;
     const centerY = (chartArea.top + chartArea.bottom) / 2;
 
@@ -60,19 +62,33 @@ const data = {
   labels: ['듣기', '읽기', '말하기', '쓰기', '단어'],
   datasets: [
     {
-      label: '1',
+      label: '영희',
       data: [2, 8, 3, 5, 2],
       backgroundColor: 'rgba(155, 155, 155, 0.2)',
       borderColor: 'rgba(155, 155, 155, 1)',
       borderWidth: 1,
     },
     {
-      label: '2',
+      label: '국희',
       data: [3, 5, 2, 1, 4],
-      // backgroundColor: 'rgba(255, 99, 132, 0.2)',
       backgroundColor: function (context:any) {
-        console.log(context);
         return createRadialGradient3(context);
+      },
+      borderColor: 'rgba(255, 99, 132, 1)',
+      borderWidth: 1,
+    },
+    {
+      label: '명희',
+      data: [1, 2, 6, 8, 3],
+      backgroundColor: stripe.onload = () => {
+        const shape = document.createElement('canvas')
+        const ctx = shape.getContext('2d')
+        if(ctx) {
+          const fillPattern = ctx.createPattern(stripe, 'repeat');
+          if (fillPattern !== null) {
+            return fillPattern;
+          }
+        }
       },
       borderColor: 'rgba(255, 99, 132, 1)',
       borderWidth: 1,
@@ -110,11 +126,11 @@ function Randar() {
           </tr>
           <tr>
             <th>가능</th>
-            <td>배경색, 보더색, 보더굵기, 범례 숨기기, tick 제어</td>
+            <td>배경색, 보더색, 보더굵기, 범례 숨기기, tick 제어, 배경 패턴 넣기</td>
           </tr>
           <tr>
             <th>확인중</th>
-            <td>배경 패턴 넣기, 도트 모양 바꾸기</td>
+            <td>도트 모양 바꾸기</td>
           </tr>
           <tr>
             <th>불가</th>
