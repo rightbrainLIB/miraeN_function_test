@@ -67,6 +67,9 @@ const data = {
       backgroundColor: 'rgba(155, 155, 155, 0.2)',
       borderColor: 'rgba(155, 155, 155, 1)',
       borderWidth: 1,
+      pointStyle: 'rectRot',
+      pointRadius: 5,
+      pointBorderColor: 'rgb(0, 0, 0)'
     },
     {
       label: '국희',
@@ -96,9 +99,29 @@ const data = {
   ],
 };
 const options = {
+  animation: {
+    onProgress: function(animation:any) {
+      //console.log(animation);
+    },
+    onComplete: function () {
+      console.log('end')
+    }
+  },
+  animations: {
+    tension: {
+      duration: 1000,
+      from: 1,
+      to: 0,
+      loop: true,
+      // easing: "easeInCirc",
+    }
+  },
   plugins: {
     legend: {
-      display: false
+      display: false,
+      labels: {
+        usePointStyle: true,
+      },
     }
   },
   scales: {
@@ -126,16 +149,21 @@ function Randar() {
           </tr>
           <tr>
             <th>가능</th>
-            <td>배경색, 보더색, 보더굵기, 범례 숨기기, tick 제어, 배경 패턴 넣기</td>
+            <td><a href="https://www.chartjs.org/docs/latest/general/colors.html" target="_blank">배경색, 보더색</a>, 보더굵기, <a href="https://www.chartjs.org/docs/latest/configuration/legend.html" target="_blank">범례 숨기기</a>, <a href="https://www.chartjs.org/docs/latest/samples/scale-options/ticks.html" target="_blank">tick 제어</a>, 배경 패턴 넣기, <a href="https://www.chartjs.org/docs/latest/samples/legend/point-style.html" target="_blank">포인트 스타일 변경</a><a href="https://www.chartjs.org/docs/latest/configuration/elements.html#types">지원가능 포인트 스타일</a></td>
           </tr>
           <tr>
             <th>확인중</th>
-            <td>도트 모양 바꾸기</td>
+            <td>animations-tension-easing</td>
+          </tr>
+          <tr>
+            <th>부분지원</th>
+            <td><a href="https://www.chartjs.org/docs/latest/configuration/animations.html" target="_blank">애니메이션 (한계 있음)</a>, 그라디언트 배경(툴팁 오픈시 화면 깨짐) </td>
           </tr>
           <tr>
             <th>불가</th>
-            <td>애니메이션</td>
+            <td>프로토파이 형태의 애니메이션 불가</td>
           </tr>
+          
         </tbody>
       </table>
       <div style={{width:'500px',height:'500px'}}>

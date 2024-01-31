@@ -8,7 +8,13 @@ import { Link } from 'react-router-dom';
 function App() {
   return (
     <>
-      <h1>미래엔 기능 테스트 (1.29) <a href="https://react-chartjs-2.js.org/" target="_blank" style={{fontSize:'12px'}}>react-chartjs-2 새창열기</a></h1>
+      <h1>미래엔 기능 테스트 (1.29)
+        <a href="https://react-chartjs-2.js.org/" target="_blank" style={{ fontSize: '12px' }}>react-chartjs-2</a>
+        / 
+        <a href="https://www.chartjs.org/docs/latest/" target="_blank" style={{ fontSize: '12px' }}>chartjs</a>
+        / 
+        <a href="https://yeon22.github.io/Chartjs-kr/docs/latest/" target="_blank" style={{ fontSize: '12px' }}>한글 메뉴얼</a>
+      </h1>
       <ul>
         <li><Link to="/miraeN_function_test/common">공통</Link></li>
         <li><Link to="/miraeN_function_test/t1">선생님 홈 & 대시보드</Link></li>
