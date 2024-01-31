@@ -30,9 +30,11 @@ stripe.src = imgs;
 
 const barOptions = {
   responsive: true,
-  plugins: [{
-    title: false,
-  }],
+  plugins: {
+    title: {
+      display: false,
+    },
+  },
   scales: {
     x: {
       border: {
@@ -66,11 +68,14 @@ const barData = {
       label: '이하나',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 25 })),
       backgroundColor: stripe.onload = () => {
+        
         const shape = document.createElement('canvas')
         const ctx = shape.getContext('2d')
         if(ctx) {
           const fillPattern = ctx.createPattern(stripe, 'repeat');
-          return fillPattern
+          if (fillPattern !== null) {
+            return fillPattern;
+          }
         }
       },
       borderRadius: 100,
@@ -106,7 +111,9 @@ const bubbleData = {
         const ctx = shape.getContext('2d')
         if(ctx) {
           const fillPattern = ctx.createPattern(stripe, 'repeat');
-          return fillPattern
+          if (fillPattern !== null) {
+            return fillPattern;
+          }
         }
       },
     },
