@@ -11,6 +11,7 @@ import {
 import { Radar } from 'react-chartjs-2';
 
 import imgs from "../img/stripe.jpg"
+import { useState } from 'react';
 const stripe = new Image();
 stripe.src = imgs;
 
@@ -100,12 +101,12 @@ const data = {
 };
 const options = {
   animation: {
-    onProgress: function(animation:any) {
-      console.log(animation);
-    },
-    onComplete: function () {
-      console.log('end')
-    }
+    // onProgress: function(animation:any) {
+    //   console.log(animation);
+    // },
+    // onComplete: function () {
+    //   console.log('end')
+    // }
   },
   animations: {
     tension: {
@@ -138,9 +139,17 @@ const options = {
 }
 
 function Randar() {
+  const [show, setShow] = useState(true)
+  function reDraw() {
+    setShow(false);
+    setTimeout(() => {
+      setShow(true);
+    }, 300);
+  }
+  
   return (
     <>
-      <h1>Randar</h1>
+      <h1>Randar <button onClick={reDraw}>(차트 다시 그리기)</button></h1>
       <table className='info'>
         <tbody>
           <tr>
@@ -166,8 +175,10 @@ function Randar() {
           
         </tbody>
       </table>
-      <div style={{width:'500px',height:'500px'}}>
-        <Radar data={data} options={options} />
+      <div style={{ width: '500px', height: '500px' }}>
+        {show &&
+          <Radar data={data} options={options} />
+        }
       </div>
     </>
   )
