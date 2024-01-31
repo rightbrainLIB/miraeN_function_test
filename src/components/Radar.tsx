@@ -101,7 +101,7 @@ const data = {
 const options = {
   animation: {
     onProgress: function(animation:any) {
-      //console.log(animation);
+      console.log(animation);
     },
     onComplete: function () {
       console.log('end')
