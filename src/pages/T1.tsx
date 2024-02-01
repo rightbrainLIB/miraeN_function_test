@@ -50,7 +50,7 @@ function T1() {
   const [progress, setProgress] = useState(100);
   const chartRef = useRef(null);
   const chartRef02 = useRef(null);
-  const [annotationY, setAnnotationY] = useState(0);
+  //const [annotationY, setAnnotationY] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -69,41 +69,63 @@ function T1() {
     };
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (chartRef.current) {
-        setAnnotationY(() => {
-          const newY = 150;
-          return newY;
-        });
-      }
-    }, 1000);
+  // useEffect(() => {
+  //   if (chartRef.current) {
+  //     const interval = setInterval(() => {
+  //       setAnnotationY((prevXMax) => {
+  //         if (prevXMax >= 50) {
+  //           return prevXMax;
+  //         }
+  //         return prevXMax + 1;
+  //       });
+  //     }, 300);
 
-    return () => clearInterval(interval);
-  }, []);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, []);
+
+  type Context = {
+    chart: {
+      ctx: CanvasRenderingContext2D;
+      canvas: HTMLCanvasElement;
+    };
+    element: {
+      x: number;
+      y: number;
+      x2: number;
+      y2: number;
+      options: {
+        borderWidth: number;
+        borderColor: string;
+        borderDashOffset: number;
+      };
+    };
+  };
+
+  function drawExtraLine(context: Context) {
+    const ctx = context.chart.ctx;
+    const width = context.chart.canvas.width;
+    const { x, y, x2, y2, options } = context.element;
+    ctx.save();
+    ctx.lineWidth = options.borderWidth;
+    ctx.strokeStyle = options.borderColor;
+    ctx.setLineDash([3, 3]);
+    ctx.lineDashOffset = options.borderDashOffset;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(x, y);
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+    ctx.restore();
+    return true;
+  }
 
   const options = {
     responsive: true,
     layout: {
-      padding: 20,
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
-      },
-      annotation: {
-        annotations: {
-          line1: {
-            yMin: 50,
-            yMax: 50,
-            xMax: annotationY,
-            borderColor: "rgb(255, 99, 132)",
-            borderWidth: 2,
-          },
-        },
+      padding: {
+        left: 80,
       },
     },
     scales: {
@@ -113,6 +135,7 @@ function T1() {
         },
       },
       y: {
+        offset: true,
         beginAtZero: true,
         display: false,
         max: 100,
@@ -123,14 +146,52 @@ function T1() {
         },
       },
     },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+      },
+      annotation: {
+        clip: false,
+        annotations: {
+          line1: {
+            yMin: 50,
+            yMax: 50,
+            // xMin: 0,
+            // xMax: 0,
+            borderColor: "rgb(0, 0, 0)",
+            borderWidth: 1,
+            borderDash: [3, 3],
+            beforeDraw: drawExtraLine,
+            label: {
+              display: true,
+              content: "2학년 평균",
+              position: "start",
+              yValue: 20,
+              xValue: 20,
+              xAdjust: -80,
+              yAdjust: 20,
+              borderRadius: 0,
+              font: {
+                size: 10,
+              },
+            },
+          },
+        },
+      },
+    },
   };
 
-  const labels = ["January", "February", "March", "April"];
+  const labels = ["1반", "2반", "3반", "4반"];
   const data = {
     labels: labels,
     datasets: [
       {
         label: "My First Dataset",
+        categoryPercentage: 0.8,
+        barPercentage: 0.5,
         data: [65, 59, 80, 81],
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
@@ -235,7 +296,8 @@ function T1() {
       {
         type: "bar" as const,
         label: "Dataset 3",
-        backgroundColor: "rgb(53, 162, 235)",
+        borderRadius: 50,
+        backgroundColor: "rgb(155, 155, 155)",
         data: [60, 50, 100, 150],
       },
     ],
@@ -373,11 +435,18 @@ function T1() {
           </tr>
           <tr>
             <th>불가</th>
-            <td>없음</td>
+            <td>프로토파이 형태의 애니메이션 불가</td>
           </tr>
         </tbody>
       </table>
-      <Stack sx={{ width: "300px", display: "flex", flexDirection: "row" }}>
+      <Stack
+        sx={{
+          width: "300px",
+          display: "flex",
+          flexDirection: "row",
+          marginLeft: 20,
+        }}
+      >
         <Bar options={options} data={data} ref={chartRef} />
       </Stack>
       <table className="info">
@@ -461,11 +530,14 @@ function T1() {
           </tr>
           <tr>
             <th>확인중</th>
-            <td>막대 그래프 내 패턴 확인 중</td>
+            <td>
+              막대 그래프 내 패턴 디자인처럼 자연스럽게 안됨, line 차트 위치
+              조정
+            </td>
           </tr>
           <tr>
             <th>불가</th>
-            <td>없음</td>
+            <td>프로토파이 형태의 애니메이션 불가</td>
           </tr>
         </tbody>
       </table>
