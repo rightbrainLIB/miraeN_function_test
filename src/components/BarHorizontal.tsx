@@ -1,78 +1,59 @@
+import React, { useState, memo, useMemo, useCallback } from 'react'
 import '../assets/init.css'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import faker from 'faker';
+import styled from '@emotion/styled';
+import Collapse from '@mui/material/Collapse';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-export const options = {
-  indexAxis: 'y' as const,
-  elements: {
-    bar: {
-      borderWidth: 2,
-    },
-  },
-  
-  responsive: true,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Horizontal Bar Chart',
-    },
-  },
-};
-
-const labels = [''];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: '우리반',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 10 })),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: '학년',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 10 })),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
-};
-
+const Box = styled.div`
+    position:relative;
+    height:50px;
+    width: 500px;
+    border:1px solid red;
+    border-radius:25px;
+    margin:10px;
+    box-sizing:border-box;
+    transition: all .3s ease;
+`
+  const Name = memo(styled.span`
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform: translateY(-50%);
+    z-index:2;
+    color:#fff;
+    font-size:12px;
+  `)
 function BarHorizontal() {
+  const [checked, setChecked] = useState(() => {
+    return false;
+  });
+  const test = useCallback(() => {
+    setChecked((prev) => !prev)
+  }, []);
+
+  const checkedToggle = useMemo(() => {
+    return checked ? true : false;
+  }, [checked])
+
+  
+
+
+  const collapseSize = useMemo(() => {
+    if (checked) return 500
+    else return 48
+  }, [checked]);
+
   return (
     <>
       <h1>BarHorizontal</h1>
       <table className='info'>
         <tbody>
           <tr>
-            <th>chartjs지원</th>
-            <td>O</td>
+            <th>chartjs, mui</th>
+            <td>적당한게 없어서 직접 구현해야됨</td>
           </tr>
           <tr>
             <th>가능</th>
-            <td></td>
+            <td>직접 구현하기에 대부분 가능</td>
           </tr>
           <tr>
             <th>확인중</th>
@@ -82,16 +63,18 @@ function BarHorizontal() {
             <th>부분지원</th>
             <td></td>
           </tr>
-          <tr>
-            <th>불가</th>
-            <td></td>
-          </tr>
-          
         </tbody>
       </table>
-      <Bar options={options} data={data} />
+
+      <Box style={{  }}>
+        <Name>우리반</Name>
+        <Collapse orientation="horizontal" collapsedSize={48} in={checked} style={{borderRadius:24}}>
+          <div style={{ width: 498, height:48,backgroundColor:'green', borderRadius:24}}></div>
+        </Collapse>
+      </Box>
+      <button onClick={test}>토글</button>
     </>
   )
 }
 
-export default BarHorizontal
+export default React.memo(BarHorizontal);
