@@ -1,4 +1,4 @@
-import React, { useState, memo, useMemo, useCallback } from 'react'
+import React, { useState, memo, useCallback } from 'react'
 import '../assets/init.css'
 import styled from '@emotion/styled';
 import Collapse from '@mui/material/Collapse';
@@ -30,17 +30,6 @@ function BarHorizontal() {
     setChecked((prev) => !prev)
   }, []);
 
-  const checkedToggle = useMemo(() => {
-    return checked ? true : false;
-  }, [checked])
-
-  
-
-
-  const collapseSize = useMemo(() => {
-    if (checked) return 500
-    else return 48
-  }, [checked]);
 
   return (
     <>
