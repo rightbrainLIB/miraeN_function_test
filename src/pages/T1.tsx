@@ -30,7 +30,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar, Chart } from "react-chartjs-2";
+import { Bar, Chart, Bubble } from "react-chartjs-2";
 import annotationPlugin from "chartjs-plugin-annotation";
 
 ChartJS.register(
@@ -283,6 +283,9 @@ function T1() {
         borderWidth: 2,
         fill: false,
         data: [60, 50, 100, 150],
+        pointStyle: "rect",
+        pointRadius: 2,
+        pointHoverRadius: 2,
       },
       {
         type: "bar" as const,
@@ -299,6 +302,98 @@ function T1() {
         borderRadius: 50,
         backgroundColor: "rgb(155, 155, 155)",
         data: [60, 50, 100, 150],
+      },
+    ],
+  };
+
+  const options03 = {
+    plugins: {
+      legend: {
+        labels: {
+          usePointStyle: true,
+          boxWidth: 5,
+          boxHeight: 5,
+          font: {
+            size: 10,
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "학습시간",
+        },
+        ticks: {
+          stepSize: 25,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "성취도",
+        },
+        ticks: {
+          stepSize: 25,
+        },
+      },
+    },
+  };
+
+  const data03 = {
+    datasets: [
+      {
+        label: "우리반",
+        data: [
+          {
+            x: 20,
+            y: 30,
+            r: 10,
+          },
+          {
+            x: 40,
+            y: 100,
+            r: 10,
+          },
+          {
+            x: 60,
+            y: 36,
+            r: 10,
+          },
+          {
+            x: 80,
+            y: 20,
+            r: 10,
+          },
+        ],
+        backgroundColor: pattern,
+      },
+      {
+        label: "학년",
+        data: [
+          {
+            x: 69,
+            y: 55,
+            r: 15,
+          },
+          {
+            x: 40,
+            y: 30,
+            r: 10,
+          },
+          {
+            x: 44,
+            y: 36,
+            r: 10,
+          },
+          {
+            x: 65,
+            y: 31,
+            r: 10,
+          },
+        ],
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
       },
     ],
   };
@@ -427,11 +522,11 @@ function T1() {
           </tr>
           <tr>
             <th>가능</th>
-            <td>grid, scales y축 안보이게 가능, annotations 라인추가</td>
+            <td>grid, scales y축 안보이게 가능</td>
           </tr>
           <tr>
             <th>확인중</th>
-            <td>가운데 라인 애니메이션 확인 중</td>
+            <td>annotations 라인추가</td>
           </tr>
           <tr>
             <th>불가</th>
@@ -529,20 +624,94 @@ function T1() {
             <td>bar+line 혼합차트</td>
           </tr>
           <tr>
-            <th>확인중</th>
+            <th>확인필요</th>
             <td>
-              막대 그래프 내 패턴 디자인처럼 자연스럽게 안됨, line 차트 위치
-              조정
+              첫번째 bar 위에 있는 line 이 line chart 인지 단순 line point
+              부분인지 확인필요
             </td>
           </tr>
           <tr>
             <th>불가</th>
-            <td>프로토파이 형태의 애니메이션 불가</td>
+            <td>
+              프로토파이 형태의 애니메이션 불가, 자연스러운 패턴 불가, line 차트
+              위치 조정 불가
+            </td>
           </tr>
         </tbody>
       </table>
       <Stack sx={{ width: "300px", display: "flex", flexDirection: "row" }}>
         <Chart type="bar" options={options02} data={data02} ref={chartRef02} />
+      </Stack>
+      <table className="info">
+        <tbody>
+          <tr>
+            <th>chartjs</th>
+            <td>O</td>
+          </tr>
+          <tr>
+            <th>가능</th>
+            <td>-</td>
+          </tr>
+          <tr>
+            <th>확인중</th>
+            <td>-</td>
+          </tr>
+          <tr>
+            <th>불가</th>
+            <td>
+              프로토파이 형태의 애니메이션 불가, legend 간격 조정 불가(별도로
+              만들어야 함)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <Stack
+        sx={{
+          width: "400px",
+          display: "flex",
+          flexDirection: "colum",
+          marginBottom: 10,
+          marginTop: 2,
+        }}
+      >
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignSelf: "center",
+            minWidth: "120px",
+          }}
+        >
+          <ListItem sx={{ padding: 0 }}>
+            <ListItemIcon
+              sx={{
+                marginRight: 0.7,
+                minWidth: "8px",
+                width: "8px",
+                height: "8px",
+                backgroundImage:
+                  "linear-gradient(to bottom right, palevioletred 25%, pink 0, pink 50%, palevioletred 0, palevioletred 75%, pink 0)",
+                backgroundSize: "2px 2px",
+                borderRadius: "50%",
+              }}
+            ></ListItemIcon>
+            <Typography sx={{ fontSize: "10px" }}>우리반</Typography>
+          </ListItem>
+          <ListItem sx={{ padding: 0 }}>
+            <ListItemIcon
+              sx={{
+                marginRight: 0.7,
+                minWidth: "8px",
+                width: "8px",
+                height: "8px",
+                backgroundColor: "rgba(0, 0, 0, .2)",
+                borderRadius: "50%",
+              }}
+            ></ListItemIcon>
+            <Typography sx={{ fontSize: "10px" }}>학년</Typography>
+          </ListItem>
+        </List>
+        <Bubble options={options03} data={data03} />
       </Stack>
     </>
   );
