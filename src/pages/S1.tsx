@@ -33,7 +33,7 @@ function S1() {
       </Box>
 
       <br />
-      <h2>우리반 학습 효울 분석 - Bubble</h2>
+      <h2>우리반 학습 효율 분석 - Bubble</h2>
       <table className="info">
         <tbody>
           <tr>
