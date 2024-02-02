@@ -1,3 +1,4 @@
+import Area from '../components/Area';
 import BarHorizontal from '../components/BarHorizontal';
 import CountUpEx from '../components/CountUp';
 import Randar from '../components/Radar';
@@ -10,6 +11,7 @@ function S1() {
       <BarHorizontal />
       <CountUpEx />
       <SemiCircle />
+      <Area />
     </>
   )
 }
