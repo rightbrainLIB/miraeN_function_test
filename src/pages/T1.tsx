@@ -50,7 +50,6 @@ function T1() {
   const [progress, setProgress] = useState(100);
   const chartRef = useRef(null);
   const chartRef02 = useRef(null);
-  //const [annotationY, setAnnotationY] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -68,41 +67,6 @@ function T1() {
       clearInterval(interval);
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (chartRef) {
-  //     ChartJS.register({
-  //       id: "mplugin",
-  //       afterDraw: () => {
-  //         if (chartRef.current) {
-  //           const ctx = chartRef.current.ctx;
-  //           const x1 = 50;
-  //           const x2 = 300;
-  //           const y = 70;
-  //           const dashWidth = 2;
-  //           const dashGap = 2;
-  //           const triangleSize = 6;
-
-  //           ctx.setLineDash([dashWidth, dashGap]);
-  //           ctx.strokeStyle = "rgb(0, 0, 0)";
-  //           ctx.lineWidth = 1;
-
-  //           ctx.beginPath();
-  //           ctx.moveTo(x1, y);
-  //           ctx.lineTo(x2, y);
-  //           ctx.stroke();
-
-  //           ctx.fillStyle = "rgb(0, 0, 0)";
-  //           ctx.beginPath();
-  //           ctx.moveTo(x1, y);
-  //           ctx.lineTo(x1 + triangleSize, y - triangleSize / 2);
-  //           ctx.lineTo(x1 + triangleSize, y + triangleSize / 2);
-  //           ctx.fill();
-  //         }
-  //       },
-  //     });
-  //   }
-  // }, [chartRef]);
 
   const options = {
     responsive: true,
@@ -140,12 +104,6 @@ function T1() {
       },
       annotation: {
         clip: false,
-        animations: {
-          numbers: {
-            properties: ["x", "y", "x2", "y2", "width", "height", "radius"],
-            type: "number",
-          },
-        },
         annotations: [
           {
             borderColor: "rgb(0, 0, 0)",
@@ -155,7 +113,12 @@ function T1() {
             label: {
               display: true,
               content: "2학년 평균",
-              position: "start",
+              position: {
+                x: "start",
+                y: "start",
+              },
+              xAdjust: -140,
+              yAdjust: 20,
             },
             yMin: 50,
             yMax: 50,
@@ -299,6 +262,17 @@ function T1() {
           },
         },
       },
+    },
+    animation: {
+      // onComplete: (animation: { chart: any }) => {
+      //   const chart = animation.chart;
+      //   if (chart) {
+      //     const scales = chart.scales;
+      //     scales["x"].max = scales["x"].max * 1.3;
+      //     scales["y"].max = scales["y"].max * 1.3;
+      //     chart.update();
+      //   }
+      // },
     },
     scales: {
       x: {
@@ -585,6 +559,18 @@ function T1() {
                       height: 40,
                       backgroundColor: "lightblue",
                       borderRadius: "50%",
+                      animation: "bounce 0.7s",
+                      "@keyframes bounce": {
+                        "0%, 20%, 50%, 80%, 100%": {
+                          transform: "scale(1)",
+                        },
+                        "40%": {
+                          transform: "scale(1.5)",
+                        },
+                        "60%": {
+                          transform: "scale(1.2)",
+                        },
+                      },
                     }}
                   ></ListItemIcon>
                 </Zoom>
