@@ -70,56 +70,39 @@ function T1() {
   }, []);
 
   // useEffect(() => {
-  //   if (chartRef.current) {
-  //     const interval = setInterval(() => {
-  //       setAnnotationY((prevXMax) => {
-  //         if (prevXMax >= 50) {
-  //           return prevXMax;
+  //   if (chartRef) {
+  //     ChartJS.register({
+  //       id: "mplugin",
+  //       afterDraw: () => {
+  //         if (chartRef.current) {
+  //           const ctx = chartRef.current.ctx;
+  //           const x1 = 50;
+  //           const x2 = 300;
+  //           const y = 70;
+  //           const dashWidth = 2;
+  //           const dashGap = 2;
+  //           const triangleSize = 6;
+
+  //           ctx.setLineDash([dashWidth, dashGap]);
+  //           ctx.strokeStyle = "rgb(0, 0, 0)";
+  //           ctx.lineWidth = 1;
+
+  //           ctx.beginPath();
+  //           ctx.moveTo(x1, y);
+  //           ctx.lineTo(x2, y);
+  //           ctx.stroke();
+
+  //           ctx.fillStyle = "rgb(0, 0, 0)";
+  //           ctx.beginPath();
+  //           ctx.moveTo(x1, y);
+  //           ctx.lineTo(x1 + triangleSize, y - triangleSize / 2);
+  //           ctx.lineTo(x1 + triangleSize, y + triangleSize / 2);
+  //           ctx.fill();
   //         }
-  //         return prevXMax + 1;
-  //       });
-  //     }, 300);
-
-  //     return () => clearInterval(interval);
+  //       },
+  //     });
   //   }
-  // }, []);
-
-  type Context = {
-    chart: {
-      ctx: CanvasRenderingContext2D;
-      canvas: HTMLCanvasElement;
-    };
-    element: {
-      x: number;
-      y: number;
-      x2: number;
-      y2: number;
-      options: {
-        borderWidth: number;
-        borderColor: string;
-        borderDashOffset: number;
-      };
-    };
-  };
-
-  function drawExtraLine(context: Context) {
-    const ctx = context.chart.ctx;
-    const width = context.chart.canvas.width;
-    const { x, y, x2, y2, options } = context.element;
-    ctx.save();
-    ctx.lineWidth = options.borderWidth;
-    ctx.strokeStyle = options.borderColor;
-    ctx.setLineDash([3, 3]);
-    ctx.lineDashOffset = options.borderDashOffset;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(x, y);
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(width, y);
-    ctx.stroke();
-    ctx.restore();
-    return true;
-  }
+  // }, [chartRef]);
 
   const options = {
     responsive: true,
@@ -128,6 +111,7 @@ function T1() {
         left: 80,
       },
     },
+
     scales: {
       x: {
         grid: {
@@ -146,6 +130,7 @@ function T1() {
         },
       },
     },
+
     plugins: {
       legend: {
         display: false,
@@ -155,31 +140,27 @@ function T1() {
       },
       annotation: {
         clip: false,
-        annotations: {
-          line1: {
-            yMin: 50,
-            yMax: 50,
-            // xMin: 0,
-            // xMax: 0,
+        animations: {
+          numbers: {
+            properties: ["x", "y", "x2", "y2", "width", "height", "radius"],
+            type: "number",
+          },
+        },
+        annotations: [
+          {
             borderColor: "rgb(0, 0, 0)",
             borderWidth: 1,
-            borderDash: [3, 3],
-            beforeDraw: drawExtraLine,
+            borderStyle: "dashed",
+            borderDash: [2, 2],
             label: {
               display: true,
               content: "2학년 평균",
               position: "start",
-              yValue: 20,
-              xValue: 20,
-              xAdjust: -80,
-              yAdjust: 20,
-              borderRadius: 0,
-              font: {
-                size: 10,
-              },
             },
+            yMin: 50,
+            yMax: 50,
           },
-        },
+        ],
       },
     },
   };
@@ -526,7 +507,7 @@ function T1() {
           </tr>
           <tr>
             <th>확인중</th>
-            <td>annotations 라인추가</td>
+            <td>평균 라인추가</td>
           </tr>
           <tr>
             <th>불가</th>
@@ -560,7 +541,7 @@ function T1() {
           </tr>
           <tr>
             <th>불가</th>
-            <td>없음</td>
+            <td>-</td>
           </tr>
         </tbody>
       </table>
@@ -660,7 +641,7 @@ function T1() {
             <th>불가</th>
             <td>
               프로토파이 형태의 애니메이션 불가, legend 간격 조정 불가(별도로
-              만들어야 함)
+              추가 필요)
             </td>
           </tr>
         </tbody>
@@ -691,7 +672,7 @@ function T1() {
                 height: "8px",
                 backgroundImage:
                   "linear-gradient(to bottom right, palevioletred 25%, pink 0, pink 50%, palevioletred 0, palevioletred 75%, pink 0)",
-                backgroundSize: "2px 2px",
+                backgroundSize: "3px 3px",
                 borderRadius: "50%",
               }}
             ></ListItemIcon>
