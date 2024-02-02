@@ -23,14 +23,10 @@ const Box = styled.div`
     font-size:12px;
   `)
 function BarHorizontal() {
-  const [checked, setChecked] = useState(() => {
-    return false;
-  });
-  const test = useCallback(() => {
+  const [checked, setChecked] = useState(false);
+  const test = () => {
     setChecked((prev) => !prev)
-  }, []);
-
-
+  }
   return (
     <>
       <h1>BarHorizontal</h1>
@@ -55,7 +51,7 @@ function BarHorizontal() {
         </tbody>
       </table>
 
-      <Box style={{  }}>
+      <Box>
         <Name>우리반</Name>
         <Collapse orientation="horizontal" collapsedSize={48} in={checked} style={{borderRadius:24}}>
           <div style={{ width: 498, height:48,backgroundColor:'green', borderRadius:24}}></div>
