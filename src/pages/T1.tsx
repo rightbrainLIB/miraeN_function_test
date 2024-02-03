@@ -75,7 +75,6 @@ function T1() {
         left: 80,
       },
     },
-
     scales: {
       x: {
         grid: {
@@ -253,7 +252,9 @@ function T1() {
   const options03 = {
     plugins: {
       legend: {
+        display:false,
         labels: {
+          
           usePointStyle: true,
           boxWidth: 5,
           boxHeight: 5,
@@ -263,37 +264,49 @@ function T1() {
         },
       },
     },
-    animation: {
-      // onComplete: (animation: { chart: any }) => {
-      //   const chart = animation.chart;
-      //   if (chart) {
-      //     const scales = chart.scales;
-      //     scales["x"].max = scales["x"].max * 1.3;
-      //     scales["y"].max = scales["y"].max * 1.3;
-      //     chart.update();
-      //   }
-      // },
-    },
     scales: {
       x: {
         title: {
           display: true,
-          text: "학습시간",
+      //    text: "학습시간",
         },
+        
         ticks: {
           stepSize: 25,
+          padding: 10,
+          text:'test',
+          callback: function ( index: number, values: number | string[]): string | undefined {
+            if (index === 0) {
+               return '느림';
+             }
+            if (values === 4 ) {
+              return '학습시간';
+            }
+          return '';
+          },
+        },
+         grid: {
+         // display: false,
+          drawTicks: false,
         },
       },
       y: {
         title: {
           display: true,
           text: "성취도",
+          align:"end"
         },
         ticks: {
           stepSize: 25,
+          padding: 10
+        },
+         grid: {
+         // display: false,
+          drawTicks: false,
         },
       },
     },
+
   };
 
   const data03 = {
