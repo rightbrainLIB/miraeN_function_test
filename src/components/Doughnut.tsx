@@ -5,7 +5,7 @@ import imgStripe from "../img/stripe.jpg"
 import imgSquare from "../img/square.jpg"
 import '../assets/init.css'
 import CountUp from 'react-countup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 ChartJS.register(
 	ArcElement, 
@@ -13,103 +13,125 @@ ChartJS.register(
 	Legend,
 );
 
-const drawBackground: Plugin<'doughnut'> = {
-	id: 'doughnutChart',
-	beforeDatasetsDraw: (chart: Chart<'doughnut'>): void => {
-		const { ctx, width, height } = chart;
-		const { innerRadius } = chart.getDatasetMeta(chart.data.datasets.length - 1).controller as DoughnutController;
-		const { outerRadius } = chart.getDatasetMeta(0).controller as DoughnutController;
-		const radiusLength = outerRadius - innerRadius;
-		const x = width / 2;
-		const y = height / 2;
-
-		ctx.beginPath();
-		ctx.arc(x, y, outerRadius - radiusLength / 2, 0, 2 * Math.PI);
-		ctx.lineWidth = radiusLength;
-		ctx.strokeStyle = "#ddd";
-		ctx.stroke();
-	},
-}
-
-const stripe = new Image();
-stripe.src = imgStripe;
-const square = new Image();
-square.src = imgSquare;
-
-const outChartData: ChartData<'doughnut'> = {
-  labels: ['우리반', "null"],
-  datasets: [
-    {
-      label: '우리반',
-      data: [50, 50],
-      backgroundColor: (() => {
-				const shape = document.createElement('canvas');
-				const ctx = shape.getContext('2d');
-				if (ctx) {
-					const fillPattern = ctx.createPattern(stripe, 'repeat');
-					if (fillPattern !== null) {
-						return [fillPattern, 'transparent'];
-					}
-				}
-				return ['transparent'];
-			})(),
-      borderWidth: 0,
-			borderRadius: 50,
-    },
-  ],
-};
-
-const innerChartData: ChartData<'doughnut'> = {
-  labels: ['이하나', "null"],
-  datasets: [
-		{
-			label: '이하나',
-			data: [70, 30],
-			backgroundColor: (() => {
-				const shape = document.createElement('canvas');
-				const ctx = shape.getContext('2d');
-				if (ctx) {
-					const fillPattern = ctx.createPattern(square, 'repeat');
-					if (fillPattern !== null) {
-						return [fillPattern, 'transparent'];
-					}
-				}
-				return ['transparent'];
-			})(),
-			borderWidth: 0,
-			borderRadius: 50,
-		},
-	],
-};
-
-const plugins: Plugin<'doughnut'>[] = [drawBackground];
-
-const outChartOptions : ChartOptions<'doughnut'> = {
-	clip: false,
-	cutout: 170,
-	plugins: {
-		legend: {
-			display: false,
-		},
-		tooltip: {
-			enabled: false
-		},
-	}
-}
-const innerChartOptions : ChartOptions<'doughnut'> = {
-	clip: false,
-	cutout: 125,
-		plugins: {
-		legend: {
-			display: false,
-		},
-		tooltip: {
-			enabled: false
-		},
-	}
-}
 
 function DoughnutChart() {
+	const drawBackground: Plugin<'doughnut'> = {
+		id: 'doughnutChart',
+		beforeDatasetsDraw: (chart: Chart<'doughnut'>): void => {
+			const { ctx, width, height } = chart;
+			const { innerRadius } = chart.getDatasetMeta(chart.data.datasets.length - 1).controller as DoughnutController;
+			const { outerRadius } = chart.getDatasetMeta(0).controller as DoughnutController;
+			const radiusLength = outerRadius - innerRadius;
+			const x = width / 2;
+			const y = height / 2;
+	
+			ctx.beginPath();
+			ctx.arc(x, y, outerRadius - radiusLength / 2, 0, 2 * Math.PI);
+			ctx.lineWidth = radiusLength;
+			ctx.strokeStyle = "#ddd";
+			ctx.stroke();
+		},
+	}
+	
+	const stripe = new Image();
+	stripe.src = imgStripe;
+	const square = new Image();
+	square.src = imgSquare;
+	
+	// 새로고침 시 이미지 패턴 사라지는 현상 수정
+	const loadImage = (src: string): Promise<HTMLImageElement> => {
+		return new Promise((resolve, reject) => {
+			const image = new Image();
+			image.onload = () => resolve(image);
+			image.onerror = reject;
+			image.src = src;
+		});
+	};
+	
+	// 이미지 로딩 함수 수정
+	const loadImages = async () => {
+		const [stripeImage, squareImage] = await Promise.all([loadImage(imgStripe), loadImage(imgSquare)]);
+	
+		// 이미지 로딩이 완료된 후에 패턴을 생성
+		const stripePattern = loadImagePattern(stripeImage);
+		const squarePattern = loadImagePattern(squareImage);
+	
+		if (stripePattern && squarePattern) {
+			outChartData.datasets[0].backgroundColor = [stripePattern, 'transparent'];
+			innerChartData.datasets[0].backgroundColor = [squarePattern, 'transparent'];
+		}
+	};
+	
+	// 이미지 로딩 함수 수정
+	const loadImagePattern = (image: HTMLImageElement): CanvasPattern | null => {
+		const shape = document.createElement('canvas');
+		const ctx = shape.getContext('2d');
+	
+		if (ctx) {
+			const fillPattern = ctx.createPattern(image, 'repeat');
+			return fillPattern;
+		}
+		return null;
+	};
+	
+	const outChartData: ChartData<'doughnut'> = {
+		labels: ['우리반', "null"],
+		datasets: [
+			{
+				label: '우리반',
+				data: [50, 50],
+				backgroundColor: (() => {
+					const [fillPattern, transparent] = [loadImagePattern(stripe), 'transparent'];
+					return fillPattern ? [fillPattern, transparent] : [transparent];
+				})(),
+				borderWidth: 0,
+				borderRadius: 50,
+			},
+		],
+	};
+	
+	const innerChartData: ChartData<'doughnut'> = {
+		labels: ['이하나', "null"],
+		datasets: [
+			{
+				label: '이하나',
+				data: [70, 30],
+				backgroundColor: (() => {
+					const [fillPattern, transparent] = [loadImagePattern(square), 'transparent'];
+					return fillPattern ? [fillPattern, transparent] : [transparent];
+				})(),
+				borderWidth: 0,
+				borderRadius: 50,
+			},
+		],
+	};
+	
+	const plugins: Plugin<'doughnut'>[] = [drawBackground];
+	
+	const outChartOptions : ChartOptions<'doughnut'> = {
+		clip: false,
+		cutout: 170,
+		plugins: {
+			legend: {
+				display: false,
+			},
+			tooltip: {
+				enabled: false
+			},
+		}
+	}
+	const innerChartOptions : ChartOptions<'doughnut'> = {
+		clip: false,
+		cutout: 125,
+			plugins: {
+			legend: {
+				display: false,
+			},
+			tooltip: {
+				enabled: false
+			},
+		}
+	}
 	const [show, setShow] = useState(true)
   function reDraw() {
     setShow(false);
@@ -117,7 +139,11 @@ function DoughnutChart() {
       setShow(true);
     }, 300);
   }
-  
+  useEffect(() => {
+    // 이미지 로딩 함수 호출
+    loadImages();
+  }, []);
+	
   return (
 		<>
 		<h1>Doughnut <button onClick={reDraw}>(차트 다시 그리기)</button></h1>
