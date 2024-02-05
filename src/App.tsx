@@ -13,7 +13,9 @@ function App() {
         / 
         <a href="https://www.chartjs.org/docs/latest/" target="_blank" style={{ fontSize: '12px' }}>chartjs</a>
         / 
-        <a href="https://yeon22.github.io/Chartjs-kr/docs/latest/" target="_blank" style={{ fontSize: '12px' }}>한글 메뉴얼</a>
+        <a href="https://yeon22.github.io/Chartjs-kr/docs/latest/" target="_blank" style={{ fontSize: '12px' }}>chartjs 한글 메뉴얼</a>
+        /
+        <a href="https://mui.com/material-ui/all-components/" target="_blank" style={{fontSize : '12px'}}>mui</a>
       </h1>
       <ul>
         <li><Link to="/miraeN_function_test/common">공통</Link></li>

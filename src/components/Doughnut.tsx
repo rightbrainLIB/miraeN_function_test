@@ -3,6 +3,8 @@ import { Doughnut } from 'react-chartjs-2';
 import { Box } from '@mui/material';
 import imgStripe from "../img/stripe.jpg"
 import imgSquare from "../img/square.jpg"
+import '../assets/init.css'
+import CountUp from 'react-countup';
 
 ChartJS.register(
 	ArcElement, 
@@ -15,10 +17,6 @@ const drawBackground = (chart: Chart<'doughnut'>) => {
   const { innerRadius } = chart.getDatasetMeta(chart.data.datasets.length - 1).controller as DoughnutController
   const { outerRadius } = chart.getDatasetMeta(0).controller as DoughnutController
   const radiusLength = outerRadius - innerRadius
-	
-	console.log(innerRadius)
-	console.log(innerRadius)
-	console.log(outerRadius)
 	const x = width / 2
 	const	y = height / 2
 
@@ -109,20 +107,69 @@ const innerChartOptions = {
 		legend: {
 			display: false,
 		},
-		// tooltip: {
-		// 	enabled: false
-		// },
+		tooltip: {
+			enabled: false
+		},
 	}
 }
 
 function DoughnutChart() {
   return (
-		<Box sx={{width : "410px", height: "410px", position: "relative", overflow: "visible"}}>
+		<>
+		<h1>Doughnut</h1>
+		<table className="info">
+			<tbody>
+				<tr>
+					<th>chartjs 지원</th>
+					<td>O</td>
+				</tr>
+				<tr>
+					<th>가능</th>
+					<td>데이터에 패턴 넣기, 숫자 카운트, 라인 채워지는 모션</td>
+				</tr>
+				<tr>
+					<th>확인중</th>
+					<td>-</td>
+				</tr>
+				<tr>
+					<th>불가</th>
+					<td>-</td>
+				</tr>
+			</tbody>
+		</table>
+		<Box sx={{width : "410px", height: "410px", position: "relative", overflow: "visible", marginBottom: "46px"}}>
+			<CountUp
+        start={0}
+        end={outChartData.datasets[0].data[0]}
+        duration={2}
+        suffix="%"
+        enableScrollSpy={true}
+      >
+        {({ countUpRef }) => (
+          <div style={{fontSize: 28, position: "absolute", left: "50%", bottom: "-46px", transform: "translateX(-50%)"}}>
+            <span ref={countUpRef} />
+          </div>
+        )}
+      </CountUp>
 			<Doughnut data={outChartData} options={outChartOptions} plugins={plugins} />
 			<Box sx={{width : "320px", height: "320px", position: "absolute", overflow: "visible", top: "50%", left: "50%", transform: "translate(-50%, -50%)"}}>
+			<CountUp
+        start={0}
+        end={innerChartData.datasets[0].data[0]}
+        duration={2}
+        suffix="%"
+        enableScrollSpy={true}
+      >
+        {({ countUpRef }) => (
+          <div style={{fontSize: 28, position: "absolute", left: "50%", bottom: "44px", transform: "translateX(-50%)"}}>
+            <span ref={countUpRef} />
+          </div>
+        )}
+      </CountUp>
 				<Doughnut data={innerChartData} options={innerChartOptions} plugins={plugins} />      
 			</Box>  
 		</Box>
+		</>
 	)
 }
 
