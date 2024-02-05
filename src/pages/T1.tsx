@@ -252,9 +252,8 @@ function T1() {
   const options03 = {
     plugins: {
       legend: {
-        display:false,
+        display: false,
         labels: {
-          
           usePointStyle: true,
           boxWidth: 5,
           boxHeight: 5,
@@ -267,46 +266,44 @@ function T1() {
     scales: {
       x: {
         title: {
-          display: true,
-      //    text: "학습시간",
+          display: false,
         },
-        
         ticks: {
           stepSize: 25,
           padding: 10,
-          text:'test',
-          callback: function ( index: number, values: number | string[]): string | undefined {
-            if (index === 0) {
-               return '느림';
-             }
-            if (values === 4 ) {
-              return '학습시간';
+          callback: function (value: number | string) {
+            if (parseInt(value.toString()) == 0) {
+              return "느림";
             }
-          return '';
+
+            if (parseInt(value.toString()) == 100) {
+              return "학습시간";
+            }
+
+            return "";
           },
         },
-         grid: {
-         // display: false,
+        grid: {
+          display: true,
           drawTicks: false,
         },
       },
       y: {
         title: {
-          display: true,
+          display: false,
           text: "성취도",
-          align:"end"
+          // align: "end",
         },
         ticks: {
           stepSize: 25,
-          padding: 10
+          padding: 10,
         },
-         grid: {
-         // display: false,
+        grid: {
+          display: true,
           drawTicks: false,
         },
       },
     },
-
   };
 
   const data03 = {
