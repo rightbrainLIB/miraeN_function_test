@@ -18,6 +18,7 @@ import {
   Divider,
   Slide,
   Zoom,
+  Chip,
 } from "@mui/material";
 import {
   Chart as ChartJS,
@@ -68,6 +69,25 @@ function T1() {
     };
   }, []);
 
+  // function drawExtraLine(context) {
+  //   const ctx = context.chart.ctx;
+  //   const width = context.chart.canvas.width;
+  //   const { x, y, x2, y2, options } = context.element;
+  //   ctx.save();
+  //   ctx.lineWidth = options.borderWidth;
+  //   ctx.strokeStyle = options.borderColor;
+  //   ctx.setLineDash([2, 2]);
+  //   ctx.lineDashOffset = options.borderDashOffset;
+  //   ctx.beginPath();
+  //   ctx.moveTo(0, y);
+  //   ctx.lineTo(x, y);
+  //   ctx.moveTo(x2, y2);
+  //   ctx.lineTo(width, y);
+  //   ctx.stroke();
+  //   ctx.restore();
+  //   return true;
+  // }
+
   const options = {
     responsive: true,
     layout: {
@@ -101,29 +121,30 @@ function T1() {
       title: {
         display: false,
       },
-      annotation: {
-        clip: false,
-        annotations: [
-          {
-            borderColor: "rgb(0, 0, 0)",
-            borderWidth: 1,
-            borderStyle: "dashed",
-            borderDash: [2, 2],
-            label: {
-              display: true,
-              content: "2학년 평균",
-              position: {
-                x: "start",
-                y: "start",
-              },
-              xAdjust: -140,
-              yAdjust: 20,
-            },
-            yMin: 50,
-            yMax: 50,
-          },
-        ],
-      },
+      // annotation: {
+      //   clip: false,
+      //   annotations: [
+      //     {
+      //       borderColor: "rgb(0, 0, 0)",
+      //       borderWidth: 1,
+      //       borderStyle: "dashed",
+      //       borderDash: [2, 2],
+      //       //  beforeDraw: drawExtraLine,
+      //       label: {
+      //         display: true,
+      //         content: "2학년 평균",
+      //         position: {
+      //           x: "start",
+      //           y: "start",
+      //         },
+      //         xAdjust: -140,
+      //         yAdjust: 20,
+      //       },
+      //       yMin: 50,
+      //       yMax: 50,
+      //     },
+      //   ],
+      // },
     },
   };
 
@@ -136,18 +157,42 @@ function T1() {
         categoryPercentage: 0.8,
         barPercentage: 0.5,
         data: [65, 59, 80, 81],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-          "rgba(255, 205, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-        ],
-        borderColor: [
-          "rgb(255, 99, 132)",
-          "rgb(255, 159, 64)",
-          "rgb(255, 205, 86)",
-          "rgb(75, 192, 192)",
-        ],
+        // backgroundColor: [
+        //   "rgba(255, 99, 132, 0.2)",
+        //   "rgba(255, 159, 64, 0.2)",
+        //   "rgba(255, 205, 86, 0.2)",
+        //   "rgba(75, 192, 192, 0.2)",
+        // ],
+        backgroundColor: (context: { dataIndex: number }) => {
+          const shape = document.createElement("canvas");
+          const ctx = shape?.getContext("2d");
+          if (ctx) {
+            const gradient = ctx.createLinearGradient(
+              0,
+              0,
+              shape.width,
+              shape.height
+            );
+
+            if (context.dataIndex === 2) {
+              gradient.addColorStop(0, "rgba(255, 0, 0, 0.5)");
+              gradient.addColorStop(1, "rgba(0, 0, 255, 0.5)");
+            } else {
+              gradient.addColorStop(0, "rgba(0, 255, 0, 0.5)");
+              gradient.addColorStop(1, "rgba(0, 0, 255, 0.5)");
+            }
+
+            return gradient;
+          }
+
+          return undefined;
+        },
+        // borderColor: [
+        //   "rgb(255, 99, 132)",
+        //   "rgb(255, 159, 64)",
+        //   "rgb(255, 205, 86)",
+        //   "rgb(75, 192, 192)",
+        // ],
         borderWidth: 1,
         borderRadius: 50,
         borderSkipped: false,
@@ -336,6 +381,7 @@ function T1() {
       },
       {
         label: "학년",
+
         data: [
           {
             x: 69,
@@ -482,7 +528,7 @@ function T1() {
       <table className="info">
         <tbody>
           <tr>
-            <th>chartjs</th>
+            <th>chartjs 지원</th>
             <td>O</td>
           </tr>
           <tr>
@@ -490,29 +536,115 @@ function T1() {
             <td>grid, scales y축 안보이게 가능</td>
           </tr>
           <tr>
-            <th>확인중</th>
-            <td>평균 라인추가</td>
+            <th>확인필요</th>
+            <td>평균부분 html 추가한 부분이라 접근성 관련 확인필요</td>
           </tr>
           <tr>
             <th>불가</th>
-            <td>프로토파이 형태의 애니메이션 불가</td>
+            <td>프로토파이 형태의 애니메이션 불가, 색변화 불가</td>
           </tr>
         </tbody>
       </table>
       <Stack
         sx={{
+          position: "relative",
           width: "300px",
           display: "flex",
           flexDirection: "row",
           marginLeft: 20,
+          overflow: "hidden",
         }}
       >
-        <Bar options={options} data={data} ref={chartRef} />
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <Bar options={options} data={data} ref={chartRef} />
+        </Box>
+        <Box
+          sx={{
+            position: "absolute",
+            width: "100%",
+            height: "1px",
+            top: "50%",
+            left: 0,
+            marginTop: "-10px",
+            opacity: 0,
+            animation: "slideInFromBottom 0.5s 0.5s forwards",
+            "@keyframes slideInFromBottom": {
+              from: {
+                transform: "translateY(100%)",
+                opacity: 1,
+              },
+              to: {
+                transform: "translateY(0)",
+                opacity: 1,
+              },
+            },
+          }}
+        >
+          <Box
+            sx={{
+              position: "relative",
+              "&::before": {
+                content: "''",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: 0,
+                height: 0,
+                borderTop: "8px solid transparent",
+                borderBottom: "8px solid transparent",
+                borderRight: "8px solid #000",
+                transform: "translate(-50%, -50%) rotate(180deg)",
+                zIndex: 1,
+              },
+            }}
+          >
+            <Divider
+              sx={{
+                position: "relative",
+                borderColor: "#000",
+                borderStyle: "dashed",
+                opacity: 0,
+                animation: "fadeIn 0.8s 0.5s forwards",
+                "@keyframes fadeIn": {
+                  "0%": {
+                    transform: " translateX(-200%)",
+                    opacity: 0,
+                  },
+                  "20%,30%": {
+                    transform: " translateX(-100%)",
+                    opacity: 1,
+                  },
+                  "100%": {
+                    transform: " translateX(0)",
+                    opacity: 1,
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Chip
+            label="2학년 평균"
+            sx={{
+              marginLeft: "-4px",
+              marginTop: "10px",
+              backgroundColor: "#000",
+              color: "#fff",
+              fontSize: "12px",
+              borderRadius: 0,
+              height: "28px",
+            }}
+          />
+        </Box>
       </Stack>
       <table className="info">
         <tbody>
           <tr>
-            <th>mui</th>
+            <th>mui 지원</th>
             <td>O</td>
           </tr>
           <tr>
@@ -593,7 +725,7 @@ function T1() {
       <table className="info">
         <tbody>
           <tr>
-            <th>chartjs</th>
+            <th>chartjs 지원</th>
             <td>O</td>
           </tr>
           <tr>
@@ -622,7 +754,7 @@ function T1() {
       <table className="info">
         <tbody>
           <tr>
-            <th>chartjs</th>
+            <th>chartjs 지원</th>
             <td>O</td>
           </tr>
           <tr>
@@ -630,8 +762,12 @@ function T1() {
             <td>-</td>
           </tr>
           <tr>
-            <th>확인중</th>
+            <th>확인</th>
             <td>-</td>
+          </tr>
+          <tr>
+            <th>확인필요</th>
+            <td>학습시간 위치가 x 좌표 데이터에 위치해서 확인이 필요함</td>
           </tr>
           <tr>
             <th>불가</th>
@@ -649,6 +785,7 @@ function T1() {
           flexDirection: "colum",
           marginBottom: 10,
           marginTop: 2,
+          marginLeft: 5,
         }}
       >
         <List
@@ -688,6 +825,7 @@ function T1() {
             <Typography sx={{ fontSize: "10px" }}>학년</Typography>
           </ListItem>
         </List>
+        <Typography sx={{ fontSize: 12 }}>성취도</Typography>
         <Bubble options={options03} data={data03} />
       </Stack>
     </>
