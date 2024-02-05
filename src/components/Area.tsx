@@ -114,7 +114,7 @@ function Area() {
           </tr>
           <tr>
             <th>가능</th>
-            <td></td>
+            <td>canvas패턴을 배경으로 깔기</td>
           </tr>
           <tr>
             <th>확인중</th>
