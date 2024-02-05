@@ -1,4 +1,4 @@
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, DoughnutController, Chart } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, DoughnutController, Chart,  ChartData, ChartOptions, Plugin } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { Box } from '@mui/material';
 import imgStripe from "../img/stripe.jpg"
@@ -13,19 +13,22 @@ ChartJS.register(
 	Legend,
 );
 
-const drawBackground = (chart: Chart<'doughnut'>) => {
-  const { ctx, width, height } = chart
-  const { innerRadius } = chart.getDatasetMeta(chart.data.datasets.length - 1).controller as DoughnutController
-  const { outerRadius } = chart.getDatasetMeta(0).controller as DoughnutController
-  const radiusLength = outerRadius - innerRadius
-	const x = width / 2
-	const	y = height / 2
+const drawBackground: Plugin<'doughnut'> = {
+	id: 'doughnutChart',
+	beforeDatasetsDraw: (chart: Chart<'doughnut'>): void => {
+		const { ctx, width, height } = chart;
+		const { innerRadius } = chart.getDatasetMeta(chart.data.datasets.length - 1).controller as DoughnutController;
+		const { outerRadius } = chart.getDatasetMeta(0).controller as DoughnutController;
+		const radiusLength = outerRadius - innerRadius;
+		const x = width / 2;
+		const y = height / 2;
 
-	ctx.beginPath()
-	ctx.arc(x, y, outerRadius - radiusLength / 2, 0, 2 * Math.PI)
-	ctx.lineWidth = radiusLength
-	ctx.strokeStyle = "#ddd"
-	ctx.stroke()
+		ctx.beginPath();
+		ctx.arc(x, y, outerRadius - radiusLength / 2, 0, 2 * Math.PI);
+		ctx.lineWidth = radiusLength;
+		ctx.strokeStyle = "#ddd";
+		ctx.stroke();
+	},
 }
 
 const stripe = new Image();
@@ -33,63 +36,55 @@ stripe.src = imgStripe;
 const square = new Image();
 square.src = imgSquare;
 
-const outChartData = {
+const outChartData: ChartData<'doughnut'> = {
   labels: ['우리반', "null"],
   datasets: [
     {
       label: '우리반',
       data: [50, 50],
-      backgroundColor: stripe.onload = () => {
-				const shape = document.createElement('canvas')
-				const ctx = shape.getContext('2d')
-				if(ctx) {
+      backgroundColor: (() => {
+				const shape = document.createElement('canvas');
+				const ctx = shape.getContext('2d');
+				if (ctx) {
 					const fillPattern = ctx.createPattern(stripe, 'repeat');
 					if (fillPattern !== null) {
-						return [fillPattern, "transparent"];
+						return [fillPattern, 'transparent'];
 					}
 				}
-			},
+				return ['transparent'];
+			})(),
       borderWidth: 0,
 			borderRadius: 50,
     },
   ],
 };
 
-const innerChartData = {
+const innerChartData: ChartData<'doughnut'> = {
   labels: ['이하나', "null"],
   datasets: [
 		{
-      label: '이하나',
-      data: [70, 30],
-      backgroundColor: square.onload = () => {
-				const shape = document.createElement('canvas')
-				const ctx = shape.getContext('2d')
-				if(ctx) {
+			label: '이하나',
+			data: [70, 30],
+			backgroundColor: (() => {
+				const shape = document.createElement('canvas');
+				const ctx = shape.getContext('2d');
+				if (ctx) {
 					const fillPattern = ctx.createPattern(square, 'repeat');
 					if (fillPattern !== null) {
-						return [fillPattern, "transparent"];
+						return [fillPattern, 'transparent'];
 					}
 				}
-			},
-      borderWidth: 0,
+				return ['transparent'];
+			})(),
+			borderWidth: 0,
 			borderRadius: 50,
-    },
-  ],
-	options: {
-		cutout: 100,
-	plugins: {
-		legend: {
-			display: false,
 		},
-	}
-	}
+	],
 };
 
-const plugins = [{
-	beforeDatasetsDraw: drawBackground,
-}];
+const plugins: Plugin<'doughnut'>[] = [drawBackground];
 
-const outChartOptions = {
+const outChartOptions : ChartOptions<'doughnut'> = {
 	clip: false,
 	cutout: 170,
 	plugins: {
@@ -101,10 +96,10 @@ const outChartOptions = {
 		},
 	}
 }
-const innerChartOptions = {
+const innerChartOptions : ChartOptions<'doughnut'> = {
 	clip: false,
 	cutout: 125,
-	plugins: {
+		plugins: {
 		legend: {
 			display: false,
 		},

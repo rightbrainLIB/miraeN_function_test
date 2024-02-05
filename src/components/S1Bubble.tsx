@@ -2,7 +2,10 @@ import {
   Chart as ChartJS,
   PointElement,
 	Legend,
-} from 'chart.js';
+  Chart,
+  ChartOptions, 
+  BubbleDataPoint,
+  } from 'chart.js';
 import imgStripe from "../img/stripe.jpg"
 import imgSquare from "../img/square.jpg"
 import {  Bubble } from 'react-chartjs-2';
@@ -20,20 +23,19 @@ stripe.src = imgStripe;
 const square = new Image();
 square.src = imgSquare;
 
-const yPos = (ctx) => {
-	const chart = ctx.chart;
-	const dataset = chart.data.datasets;
-	const result = dataset.filter((data) => data.label  === '이하나' );
-	return result[0].data[0].y;
-}
-function xPos(ctx) {
-	const chart = ctx.chart;
-	const dataset = chart.data.datasets;
-	const result = dataset.filter((data) => data.label  === '이하나' );
-	return result[0].data[0].x + (result[0].data[0].r / 4.7);
-}
+const yPos = (ctx: { chart: Chart<'bubble', BubbleDataPoint[], unknown> }) => {
+  const dataset = ctx.chart?.data?.datasets;
+  const result = dataset?.filter((data) => data.label === '이하나');
+  return result?.[0]?.data?.[0]?.y;
+};
 
-const bubbleOptions = {
+const xPos = (ctx: { chart: Chart<'bubble', BubbleDataPoint[], unknown> }) => {
+  const dataset = ctx.chart?.data?.datasets;
+  const result = dataset?.filter((data) => data.label === '이하나');
+  return result?.[0]?.data?.[0]?.x + (result?.[0]?.data?.[0]?.r / 4.7);
+};
+
+const bubbleOptions : ChartOptions<'bubble'> = {
 	clip: false,
 	layout: {
 		padding: {
@@ -113,11 +115,11 @@ const bubbleOptions = {
 			ticks: {
 				stepSize: 25,
 				autoSkip: false,
-				callback: function(value:number, index: number, ticks: Array<object>) {
-				return (
-					index === 0 ? '느림' : index === ticks.length - 1 ? '학습시간' : ""
-					);
-				}
+				callback: function(tickValue: string | number, index: number, ticks: Array<object>) {
+          return (
+            index === 0 ? '느림' : index === ticks.length - 1 ? '학습시간' : ""
+          );
+        },
 			},
 		},
 		y: {
@@ -127,9 +129,11 @@ const bubbleOptions = {
 			ticks: {
 				stepSize: 25,
 				autoSkip: false,
-				callback: function(value: number) {
-					return value + '%';
-				}
+				callback: function (tickValue: string | number) {
+          if (typeof tickValue === 'number') {
+            return tickValue + '%';
+          }
+        },
 			},
 			grid: {
 				drawTicks: false
@@ -188,7 +192,7 @@ const bubbleData = {
 ],
 };
 function S1Bubble() {
-  return <Bubble id="myBubbleChart" options={bubbleOptions} data={bubbleData} />
+  return <Bubble options={bubbleOptions} data={bubbleData} />
 }
 
 export default S1Bubble
