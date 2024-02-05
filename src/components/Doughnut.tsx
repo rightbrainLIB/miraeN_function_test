@@ -142,7 +142,7 @@ function DoughnutChart() {
 				</tr>
 				<tr>
 					<th>불가</th>
-					<td>-</td>
+					<td>범례는 별도 코딩으로 넣야함</td>
 				</tr>
 			</tbody>
 		</table>
@@ -151,7 +151,7 @@ function DoughnutChart() {
 				<CountUp
 					start={0}
 					end={outChartData.datasets[0].data[0]}
-					duration={2}
+					duration={1}
 					suffix="%"
 					enableScrollSpy={true}
 					>
@@ -166,7 +166,7 @@ function DoughnutChart() {
 				<CountUp
 					start={0}
 					end={innerChartData.datasets[0].data[0]}
-					duration={2}
+					duration={1}
 					suffix="%"
 					enableScrollSpy={true}
 					>
