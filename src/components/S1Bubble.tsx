@@ -2,13 +2,17 @@ import {
   Chart as ChartJS,
   PointElement,
 	Legend,
+	ChartDataset,
+	ChartTypeRegistry,
+	Point,
+	BubbleDataPoint,
 } from 'chart.js';
 import imgStripe from "../img/stripe.jpg"
 import imgSquare from "../img/square.jpg"
 import {  Bubble } from 'react-chartjs-2';
 import faker from 'faker';
 // import ChartDataLabels from "chartjs-plugin-datalabels";
-import annotationPlugin from "chartjs-plugin-annotation";
+import annotationPlugin, { PartialEventContext } from "chartjs-plugin-annotation";
 
 ChartJS.register(
   PointElement,
@@ -16,27 +20,26 @@ ChartJS.register(
   annotationPlugin
 );
 
-
 const stripe = new Image();
 stripe.src = imgStripe;
 const square = new Image();
 square.src = imgSquare;
 
-const yPos = (ctx) => {
+const yPos = (ctx: PartialEventContext) => {
 	const chart = ctx.chart;
 	const dataset = chart.data.datasets;
-	const result = dataset.filter((data) => data.label  === '이하나' );
-	return result[0].data[0].y;
+	const result : ChartDataset<keyof ChartTypeRegistry, (number | [number, number] | Point | BubbleDataPoint | null)[]>[] = dataset.filter((data) => data.label  === '이하나' );
+	return result[0]!.data[0]!.y;
 }
-function xPos(ctx) {
+function xPos(ctx: PartialEventContext) {
 	const chart = ctx.chart;
 	const dataset = chart.data.datasets;
 	const result = dataset.filter((data) => data.label  === '이하나' );
-	return result[0].data[0].x + (result[0].data[0].r / 4.7);
+	return result[0]!.data[0]!.x + (result[0]!.data[0!].r / 4.7);
 }
 
 const bubbleOptions = {
-	clip: false,
+	clip: 0,
 	layout: {
 		padding: {
 			right: 110, 
@@ -56,10 +59,9 @@ const bubbleOptions = {
 			annotations: {
 				point1: {
 					drawTime: 'afterDraw',
-					type: 'point',
 					pointStyle: 'triangle',
-					xValue: (ctx) => xPos(ctx) + 8,//xMax
-					yValue: (ctx) => yPos(ctx),
+					xValue: (ctx: PartialEventContext) => xPos(ctx) + 8,//xMax
+					yValue: (ctx: PartialEventContext) => yPos(ctx),
 					backgroundColor: 'black',
 					rotation: -90,
 					radius: 6, //사이즈
@@ -67,9 +69,8 @@ const bubbleOptions = {
 				},
 				label1: {
 					drawTime: 'afterDraw',
-					type: 'label',
-					xValue: (ctx) => xPos(ctx) + 14,
-					yValue: (ctx) => yPos(ctx),
+					xValue: (ctx: PartialEventContext) => xPos(ctx) + 14,
+					yValue: (ctx: PartialEventContext) => yPos(ctx),
 					backgroundColor: 'black',
 					content: ['이하나'],
 					color: "white",
@@ -82,7 +83,6 @@ const bubbleOptions = {
 				},
 				label2: {
 					drawTime: 'afterDraw',
-					type: 'label',
 					xValue: -4,
 					yValue: 109,
 					content: ['성취도'],
@@ -95,10 +95,10 @@ const bubbleOptions = {
 				line1: {
 					drawTime: 'afterDraw',
 					init: true,
-					yMin: (ctx) => yPos(ctx),
-					yMax: (ctx) => yPos(ctx),
-					xMin: (ctx) => xPos(ctx),
-					xMax: (ctx) => xPos(ctx) + 8,//xMin + 8
+					yMin: (ctx: PartialEventContext) => yPos(ctx),
+					yMax: (ctx: PartialEventContext) => yPos(ctx),
+					xMin: (ctx: PartialEventContext) => xPos(ctx),
+					xMax: (ctx: PartialEventContext) => xPos(ctx) + 8,//xMin + 8
 					borderDash: [3, 3],
 					borderColor: "black",
 					borderWidth: 2,
@@ -115,7 +115,7 @@ const bubbleOptions = {
 			ticks: {
 				stepSize: 25,
 				autoSkip: false,
-				callback: function(value:number, index: number, ticks: Array<object>) {
+				callback: function(_value:number, index: number, ticks: Array<object>) {
 				return (
 					index === 0 ? '느림' : index === ticks.length - 1 ? '학습시간' : ""
 					);
@@ -190,7 +190,7 @@ const bubbleData = {
 ],
 };
 function S1Bubble() {
-  return <Bubble id="myBubbleChart" options={bubbleOptions} data={bubbleData} />
+  return <Bubble options={bubbleOptions} data={bubbleData} />
 }
 
 export default S1Bubble
