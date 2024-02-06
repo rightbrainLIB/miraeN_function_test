@@ -575,7 +575,7 @@ function T1() {
             animation: "slideInFromBottom 0.5s 0.5s forwards",
             "@keyframes slideInFromBottom": {
               from: {
-                transform: "translateY(100%)",
+                transform: "translateY(30px)",
                 opacity: 1,
               },
               to: {
