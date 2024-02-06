@@ -95,6 +95,8 @@ const data = {
       data: [75, 50, 80, 56, 78, 90],
       backgroundColor: "#1976d2",
       borderColor: "#1976d2",
+      borderWidth: 1,
+      pointRadius: 5,
     },
   ],
 };

@@ -69,25 +69,6 @@ function T1() {
     };
   }, []);
 
-  // function drawExtraLine(context) {
-  //   const ctx = context.chart.ctx;
-  //   const width = context.chart.canvas.width;
-  //   const { x, y, x2, y2, options } = context.element;
-  //   ctx.save();
-  //   ctx.lineWidth = options.borderWidth;
-  //   ctx.strokeStyle = options.borderColor;
-  //   ctx.setLineDash([2, 2]);
-  //   ctx.lineDashOffset = options.borderDashOffset;
-  //   ctx.beginPath();
-  //   ctx.moveTo(0, y);
-  //   ctx.lineTo(x, y);
-  //   ctx.moveTo(x2, y2);
-  //   ctx.lineTo(width, y);
-  //   ctx.stroke();
-  //   ctx.restore();
-  //   return true;
-  // }
-
   const options = {
     responsive: true,
     layout: {
@@ -157,12 +138,6 @@ function T1() {
         categoryPercentage: 0.8,
         barPercentage: 0.5,
         data: [65, 59, 80, 81],
-        // backgroundColor: [
-        //   "rgba(255, 99, 132, 0.2)",
-        //   "rgba(255, 159, 64, 0.2)",
-        //   "rgba(255, 205, 86, 0.2)",
-        //   "rgba(75, 192, 192, 0.2)",
-        // ],
         backgroundColor: (context: { dataIndex: number }) => {
           const shape = document.createElement("canvas");
           const ctx = shape?.getContext("2d");
@@ -663,13 +638,24 @@ function T1() {
       </table>
       <Stack>
         <Box sx={{ marginLeft: 10 }}>
-          <List>
-            <ListItem sx={{ padding: 0 }}>
+          <List sx={{ display: "flex", flexDirection: "row" }}>
+            <ListItem sx={{ padding: 0, width: "80px" }}>
               <Box sx={{ position: "relative" }}>
                 <Divider
                   orientation="vertical"
                   sx={{ width: 1, height: 50, borderRight: 0, borderLeft: 1 }}
                 />
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    top: "-5px",
+                    left: "7px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  1반
+                </Typography>
                 <Box
                   sx={{
                     overflow: "hidden",
@@ -678,17 +664,24 @@ function T1() {
                     marginTop: -5,
                   }}
                 >
-                  <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+                  <Slide
+                    direction="up"
+                    timeout={1000}
+                    in={true}
+                    mountOnEnter
+                    unmountOnExit
+                  >
                     <Box
                       sx={{
                         position: "absolute",
                         bottom: 0,
                         left: 10,
-                        width: 20,
-                        height: 30,
+                        // width: 20,
+                        // height: 30,
+                        fontSize: 12,
                       }}
                     >
-                      text
+                      편안
                     </Box>
                   </Slide>
                 </Box>
@@ -700,6 +693,78 @@ function T1() {
                       width: 40,
                       height: 40,
                       backgroundColor: "lightblue",
+                      borderRadius: "50%",
+                      animation: "bounce 0.7s",
+                      "@keyframes bounce": {
+                        "0%, 20%, 50%, 80%, 100%": {
+                          transform: "scale(1)",
+                        },
+                        "40%": {
+                          transform: "scale(1.5)",
+                        },
+                        "60%": {
+                          transform: "scale(1.2)",
+                        },
+                      },
+                    }}
+                  ></ListItemIcon>
+                </Zoom>
+              </Box>
+            </ListItem>
+            <ListItem sx={{ padding: 0, width: "80px" }}>
+              <Box sx={{ position: "relative" }}>
+                <Divider
+                  orientation="vertical"
+                  sx={{ width: 1, height: 50, borderRight: 0, borderLeft: 1 }}
+                />
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    top: "-5px",
+                    left: "7px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  2반
+                </Typography>
+                <Box
+                  sx={{
+                    overflow: "hidden",
+                    height: 24,
+                    position: "relative",
+                    marginTop: -5,
+                  }}
+                >
+                  <Slide
+                    direction="up"
+                    timeout={1000}
+                    in={true}
+                    mountOnEnter
+                    unmountOnExit
+                  >
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 10,
+                        // width: 20,
+                        // height: 30,
+                        fontSize: 12,
+                      }}
+                    >
+                      좋음
+                    </Box>
+                  </Slide>
+                </Box>
+                <Zoom in={true} mountOnEnter unmountOnExit>
+                  <ListItemIcon
+                    sx={{
+                      marginTop: 2,
+                      minWidth: 40,
+                      width: 40,
+                      height: 40,
+                      backgroundColor: "lightsteelblue",
                       borderRadius: "50%",
                       animation: "bounce 0.7s",
                       "@keyframes bounce": {
