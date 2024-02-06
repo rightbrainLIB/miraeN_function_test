@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback } from 'react'
+import React, { useState, memo } from 'react'
 import '../assets/init.css'
 import styled from '@emotion/styled';
 import Collapse from '@mui/material/Collapse';
