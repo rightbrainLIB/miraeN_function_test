@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Box, Divider, Chip } from "@mui/material";
 import { Line } from "react-chartjs-2";
 
 import {
@@ -39,15 +40,25 @@ const options = {
   scales: {
     x: {
       grid: {
-        display: false,
-        drawTicks: false,
+        display: true,
+        color: "transparent",
+        drawTicks: true,
+        tickLength: 3,
+        tickColor: "#000",
+        // tickBorderDash: [5, 5],
+        drawOnChartArea: true,
       },
       ticks: {
+        padding: 10,
         // callback: function (value: number | string) {
         //   const marker =
         //     '<div style="display: inline-block; width: 20px; height: 20px; background-color: red; margin-right: 5px;"></div>';
         //   return marker + value;
         // },
+      },
+      border: {
+        display: true,
+        color: "#f0f0f0",
       },
     },
     y: {
@@ -56,14 +67,20 @@ const options = {
       grid: {
         display: true,
         drawTicks: false,
-        // tickLength: 20,
+        // tickLength: 100,
+        // tickColor: "#000",
+        // tickBorderDash: [5, 5],
+        // drawOnChartArea: true,
       },
+
       ticks: {
+        beginAtZero: true,
         stepSize: 25,
         padding: 10,
       },
       border: {
         display: false,
+        dash: [2, 2],
       },
     },
   },
@@ -76,6 +93,8 @@ const data = {
     {
       label: "Blue",
       data: [75, 50, 80, 56, 78, 90],
+      backgroundColor: "#1976d2",
+      borderColor: "#1976d2",
     },
   ],
 };
@@ -180,13 +199,112 @@ function T2() {
             <th>불가</th>
             <td>
               프로토파이 형태의 애니메이션 불가, 평균라인 불가(별로도
-              추가해야함)
+              추가해야함), x축 label 위 marker 디자인대로 불가
             </td>
           </tr>
         </tbody>
       </table>
-      <Stack sx={{ width: "300px", margin: 5 }}>
+      <Stack
+        sx={{
+          width: "500px",
+          margin: 5,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         <Line options={options} data={data} />
+        <Box
+          sx={{
+            position: "absolute",
+            width: "100%",
+            height: "1px",
+            top: "41%",
+            left: 0,
+            marginTop: "-10px",
+            opacity: 0,
+            animation: "slideInFromBottom 0.5s 0.5s forwards",
+            "@keyframes slideInFromBottom": {
+              from: {
+                transform: "translateY(100px)",
+                opacity: 1,
+              },
+              to: {
+                transform: "translateY(0)",
+                opacity: 1,
+              },
+            },
+          }}
+        >
+          <Box
+            sx={{
+              position: "relative",
+            }}
+          >
+            <Divider
+              sx={{
+                position: "relative",
+                borderColor: "#b1afaf",
+                borderStyle: "dashed",
+                opacity: 0,
+                width: "96%",
+                left: "0",
+                overflow: "visible",
+                animation: "fadeIn 0.8s 0.5s forwards",
+                "@keyframes fadeIn": {
+                  "0%": {
+                    transform: " translateX(-200%)",
+                    opacity: 0,
+                  },
+                  "20%,30%": {
+                    transform: " translateX(-100%)",
+                    opacity: 1,
+                  },
+                  "100%": {
+                    transform: " translateX(0)",
+                    opacity: 1,
+                  },
+                },
+                "&::before": {
+                  content: "''",
+                  position: "absolute",
+                  top: 0,
+                  right: "-3px",
+                  width: 0,
+                  height: 0,
+                  borderTop: "4px solid transparent",
+                  borderBottom: "4px solid transparent",
+                  borderRight: "4px solid #b1afaf",
+                  transform: "translate(-50%, -50%) rotate(180deg)",
+                  zIndex: 1,
+                },
+              }}
+            />
+          </Box>
+          <Chip
+            label="평균"
+            sx={{
+              position: "absolute",
+              top: "-12px",
+              left: "4px",
+              marginLeft: "-4px",
+              backgroundColor: "#b1afaf",
+              color: "#fff",
+              fontSize: "12px",
+              borderRadius: 50,
+              height: "28px",
+              zIndex: 1,
+              "&::before": {
+                content: "''",
+                position: "absolute",
+                top: "7px",
+                right: "-16px",
+                width: "15px",
+                height: "15px",
+                backgroundColor: "#fff",
+              },
+            }}
+          />
+        </Box>
       </Stack>
     </>
   );
