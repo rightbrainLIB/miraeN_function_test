@@ -2,15 +2,13 @@ import {
   Chart as ChartJS,
   PointElement,
 	Legend,
-  Chart,
   ChartOptions, 
-  BubbleDataPoint,
   } from 'chart.js';
 import imgStripe from "../img/stripe.jpg"
 import imgSquare from "../img/square.jpg"
 import {  Bubble } from 'react-chartjs-2';
 import faker from 'faker';
-import annotationPlugin from "chartjs-plugin-annotation";
+import annotationPlugin, { PartialEventContext } from "chartjs-plugin-annotation";
 
 ChartJS.register(
   PointElement,
@@ -18,20 +16,22 @@ ChartJS.register(
   annotationPlugin
 );
 
+
+
 const stripe = new Image();
 stripe.src = imgStripe;
 const square = new Image();
 square.src = imgSquare;
 
-const yPos = (ctx: { chart: Chart<'bubble', BubbleDataPoint[], unknown> }) => {
+const yPos = (ctx: PartialEventContext) => {
   const dataset = ctx.chart?.data?.datasets;
-  const result = dataset?.filter((data) => data.label === '이하나');
-  return result?.[0]?.data?.[0]?.y;
+  const result = dataset?.filter((data) => data.label === '이하나') as Array<{data: Array<{y: number}>}>;
+	return result?.[0]?.data?.[0]?.y;
 };
 
-const xPos = (ctx: { chart: Chart<'bubble', BubbleDataPoint[], unknown> }) => {
+const xPos = (ctx: PartialEventContext) => {
   const dataset = ctx.chart?.data?.datasets;
-  const result = dataset?.filter((data) => data.label === '이하나');
+  const result = dataset?.filter((data) => data.label === '이하나') as Array<{data: Array<{x: number, r: number}>}>;
   return result?.[0]?.data?.[0]?.x + (result?.[0]?.data?.[0]?.r / 4.7);
 };
 
@@ -39,8 +39,9 @@ const bubbleOptions : ChartOptions<'bubble'> = {
 	clip: false,
 	layout: {
 		padding: {
+			top: 15,
+			bottom: 25,
 			right: 110, 
-			bottom: 25
 		},
 	},
 	plugins: {
@@ -83,13 +84,13 @@ const bubbleOptions : ChartOptions<'bubble'> = {
 				label2: {
 					drawTime: 'afterDraw',
 					type: 'label',
-					xValue: -4,
-					yValue: 109,
+					xValue: -7,
+					yValue: 112,
 					content: ['성취도'],
 					color: "#444",
 					borderRadius: 4,
 					font: {
-						size: 13,
+						size: 12,
 					},
 				},
 				line1: {
@@ -104,22 +105,28 @@ const bubbleOptions : ChartOptions<'bubble'> = {
 					borderWidth: 2,
 				},
 			}
-		}
+		} 
 	},
 	scales: {
 		x: {
 			max: 100,
 			min: 0,
 			beginAtZero: true,
-			stacked: true,
 			ticks: {
+				align: "inner",
 				stepSize: 25,
 				autoSkip: false,
-				callback: function(tickValue: string | number, index: number, ticks: Array<object>) {
-          return (
-            index === 0 ? '느림' : index === ticks.length - 1 ? '학습시간' : ""
-          );
+				padding: 15,
+				callback: function(_tickValue: string | number, index: number, ticks: Array<object>) {
+					if(ticks) {
+						return (
+							index === 0 ? '느림' : index === ticks.length - 1 ? '학습시간' : ""
+						);
+					}
         },
+			},
+			grid: {
+				drawTicks: false,
 			},
 		},
 		y: {
@@ -127,6 +134,7 @@ const bubbleOptions : ChartOptions<'bubble'> = {
 			min: 0,
 			beginAtZero: true,
 			ticks: {
+				padding: 15,
 				stepSize: 25,
 				autoSkip: false,
 				callback: function (tickValue: string | number) {
@@ -136,7 +144,7 @@ const bubbleOptions : ChartOptions<'bubble'> = {
         },
 			},
 			grid: {
-				drawTicks: false
+				drawTicks: false,
 			},
 		},
 	},
