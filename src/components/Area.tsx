@@ -36,16 +36,15 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
+      display: false,
     },
     title: {
-      display: true,
-      text: 'Chart.js Line Chart',
+      display: false,
     },
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const labels = ['0점', '50점', '100점'];
 
 function createDiagonalPattern(color = 'black') {
   // create a 10x10 px canvas for the pattern's base shape
@@ -68,6 +67,8 @@ function createDiagonalPattern(color = 'black') {
     c.stroke()
     // create the pattern from the shape
     return c.createPattern(shape, 'repeat')
+  } else {
+    return null;
   }
 }
 
@@ -79,21 +80,24 @@ export const data = {
       label: 'Dataset 2',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: createDiagonalPattern('gray'),
+      backgroundColor: createDiagonalPattern('gray') as any,
+      lineTension: 0.5,
     },
     {
       fill: true,
       label: 'Dataset 2',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: createDiagonalPattern('blue'),
+      backgroundColor: createDiagonalPattern('blue') as any,
+      lineTension: 0.5,
     },
     {
       fill: true,
       label: 'Dataset 3',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: createDiagonalPattern('red'),
+      backgroundColor: createDiagonalPattern('red') as any,
+      lineTension: 0.5,
     },
     
   ],
@@ -114,7 +118,7 @@ function Area() {
           </tr>
           <tr>
             <th>가능</th>
-            <td>canvas패턴을 배경으로 깔기</td>
+            <td>canvas패턴을 배경으로 깔기, <a href="https://www.chartjs.org/docs/2.9.4/charts/line.html" target="_blank">곡선표현 lineTension</a></td>
           </tr>
           <tr>
             <th>확인중</th>
@@ -126,7 +130,7 @@ function Area() {
           </tr>
           <tr>
             <th>불가</th>
-            <td></td>
+            <td>애니메이션</td>
           </tr>
         </tbody>
       </table>
