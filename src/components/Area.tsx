@@ -66,10 +66,8 @@ function createDiagonalPattern(color = 'black') {
     c.lineTo(2, 10)
     c.stroke()
     // create the pattern from the shape
-    return c.createPattern(shape, 'repeat')
-  } else {
-    return null;
-  }
+    return c.createPattern(shape, 'repeat') as any
+  } 
 }
 
 export const data = {
@@ -80,7 +78,7 @@ export const data = {
       label: 'Dataset 2',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: createDiagonalPattern('gray') as any,
+      backgroundColor: createDiagonalPattern('gray'),
       lineTension: 0.5,
     },
     {
@@ -88,7 +86,7 @@ export const data = {
       label: 'Dataset 2',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: createDiagonalPattern('blue') as any,
+      backgroundColor: createDiagonalPattern('blue'),
       lineTension: 0.5,
     },
     {
@@ -96,7 +94,7 @@ export const data = {
       label: 'Dataset 3',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
       borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: createDiagonalPattern('red') as any,
+      backgroundColor: createDiagonalPattern('red'),
       lineTension: 0.5,
     },
     
