@@ -2,7 +2,8 @@ import {
   Chart as ChartJS,
   PointElement,
 	Legend,
-  ChartOptions, 
+  ChartOptions,
+	Chart,
   } from 'chart.js';
 import imgStripe from "../img/stripe.jpg"
 import imgSquare from "../img/square.jpg"
@@ -35,8 +36,29 @@ const xPos = (ctx: PartialEventContext) => {
   return result?.[0]?.data?.[0]?.x + (result?.[0]?.data?.[0]?.r / 4.7);
 };
 
+const legendHeight = {
+  id: "legendHeight",
+  beforeInit: (chart: Chart<"bubble">) => {
+		if (chart.legend) {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			//@ts-expect-error
+      const fitValue = chart.legend?.fit;
+
+      if (fitValue) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				//@ts-expect-error
+        chart.legend.fit = function (this: Legend): void {
+          fitValue.bind(chart.legend)();
+          this.height += 50;
+        };
+      }
+    }
+  }
+};
+
 const bubbleOptions : ChartOptions<'bubble'> = {
 	clip: false,
+	maintainAspectRatio: false,
 	layout: {
 		padding: {
 			top: 15,
@@ -48,6 +70,7 @@ const bubbleOptions : ChartOptions<'bubble'> = {
 		legend: {
 			labels: {
 				usePointStyle: true,
+				boxHeight: 10
 			},
 		},
 		tooltip: {
@@ -200,7 +223,7 @@ const bubbleData = {
 ],
 };
 function S1Bubble() {
-  return <Bubble options={bubbleOptions} data={bubbleData} />
+  return <Bubble options={bubbleOptions} data={bubbleData} plugins={[legendHeight]} />
 }
 
 export default S1Bubble

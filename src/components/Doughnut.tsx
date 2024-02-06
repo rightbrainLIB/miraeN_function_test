@@ -14,7 +14,7 @@ ChartJS.register(
 );
 
 
-function DoughnutChart() {
+const DoughnutChart = () => {
 	const drawBackground: Plugin<'doughnut'> = {
 		id: 'doughnutChart',
 		beforeDatasetsDraw: (chart: Chart<'doughnut'>): void => {

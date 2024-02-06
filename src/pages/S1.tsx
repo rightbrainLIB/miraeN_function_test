@@ -42,11 +42,11 @@ function S1() {
           </tr>
           <tr>
             <th>가능</th>
-            <td>학생 데이터에 이름표시, 데이터에 패턴 넣기, 범례 라벨 원표시</td>
+            <td>학생 데이터에 이름라벨표시, 데이터에 패턴 넣기, 범례 라벨 원표시</td>
           </tr>
           <tr>
             <th>확인중</th>
-            <td>범례와 차트 사이 간격 조정가능 여부</td>
+            <td>x값이 100에 가까울 때 학생 이름라벨 점선 잘려보임</td>
           </tr>
           <tr>
             <th>불가</th>
@@ -54,7 +54,7 @@ function S1() {
           </tr>
         </tbody>
       </table>
-      <Box sx={{width : "600px", height: "500px"}}>
+      <Box sx={{width : "580px", height: "380px"}}>
         <S1Bubble />
       </Box>
     </>
