@@ -29,6 +29,9 @@ const barOptions = {
     title: {
       display: false,
     },
+    legend: {
+      display: false
+    }
   },
   scales: {
     x: {
@@ -63,7 +66,6 @@ const barData = {
       label: '이하나',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 25 })),
       backgroundColor: stripe.onload = () => {
-        
         const shape = document.createElement('canvas')
         const ctx = shape.getContext('2d')
         if(ctx) {
