@@ -34,6 +34,51 @@ import {
 import { Bar, Chart, Bubble } from "react-chartjs-2";
 import annotationPlugin from "chartjs-plugin-annotation";
 
+const lineoffset = {
+  id: "lineoffset",
+  afterDraw: (chart: {
+    ctx: any;
+    data: { datasets: any };
+    scales: { x: any; y: any };
+  }) => {
+    const ctx = chart.ctx;
+    const datasets = chart.data.datasets;
+    const xAxis = chart.scales.x;
+    const yAxis = chart.scales.y;
+
+    const datasetIndex = datasets.findIndex(
+      (dataset: { label: string }) => dataset.label === "Dataset 2"
+    );
+    const lineData = datasets[datasetIndex].data;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgb(255, 99, 132)";
+    lineData.forEach((value: number, index: number) => {
+      const x = xAxis.getPixelForValue(index);
+      const y = yAxis.getPixelForValue(value);
+      if (index === 0) {
+        ctx.moveTo(x - 10, y);
+      } else {
+        ctx.lineTo(x - 10, y);
+      }
+    });
+    ctx.stroke();
+
+    lineData.forEach((value: number, index: number) => {
+      const x = xAxis.getPixelForValue(index);
+      const y = yAxis.getPixelForValue(value);
+      ctx.beginPath();
+      ctx.arc(x - 10, y, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "rgb(255, 99, 132)";
+      ctx.fill();
+    });
+
+    ctx.restore();
+  },
+};
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -43,7 +88,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  annotationPlugin
+  annotationPlugin,
+  lineoffset
 );
 
 function T1() {
@@ -102,6 +148,7 @@ function T1() {
       title: {
         display: false,
       },
+      lineoffset: false,
       // annotation: {
       //   clip: false,
       //   annotations: [
@@ -142,19 +189,21 @@ function T1() {
           const shape = document.createElement("canvas");
           const ctx = shape?.getContext("2d");
           if (ctx) {
-            const gradient = ctx.createLinearGradient(
-              0,
-              0,
-              shape.width,
-              shape.height
-            );
+            // const gradient = ctx.createLinearGradient(
+            //   0,
+            //   0,
+            //   shape.width,
+            //   shape.height
+            // );
+            const gradient = ctx.createLinearGradient(0, shape.width, 0, 10);
 
             if (context.dataIndex === 2) {
               gradient.addColorStop(0, "rgba(255, 0, 0, 0.5)");
               gradient.addColorStop(1, "rgba(0, 0, 255, 0.5)");
             } else {
-              gradient.addColorStop(0, "rgba(0, 255, 0, 0.5)");
-              gradient.addColorStop(1, "rgba(0, 0, 255, 0.5)");
+              gradient.addColorStop(0, "rgba(144, 238, 144, 0.5)");
+              gradient.addColorStop(0.5, "rgba(144, 238, 144, 0.8)");
+              gradient.addColorStop(1, "rgba(0, 128, 0, 1)");
             }
 
             return gradient;
@@ -173,36 +222,6 @@ function T1() {
         borderSkipped: false,
       },
     ],
-  };
-
-  const options02 = {
-    responsive: true,
-    layout: {
-      padding: 20,
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        beginAtZero: true,
-        display: false,
-        grid: {
-          drawBorder: false,
-          display: false,
-        },
-      },
-    },
   };
 
   const createPattern = (
@@ -235,21 +254,63 @@ function T1() {
     "rgba(255, 99, 132, .5)"
   ) as CanvasPattern;
 
+  const options02 = {
+    responsive: true,
+
+    layout: {
+      padding: 20,
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+      },
+      lineoffset: true,
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          padding: 5,
+        },
+        grid: {
+          drawTicks: false,
+          display: true,
+        },
+      },
+      x2: {
+        display: false,
+        offset: true,
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
+
   const labels02 = ["January", "February", "March", "April"];
   const data02 = {
     labels: labels02,
     datasets: [
-      {
-        type: "line" as const,
-        label: "Dataset 1",
-        borderColor: "rgb(255, 99, 132)",
-        borderWidth: 2,
-        fill: false,
-        data: [60, 50, 100, 150],
-        pointStyle: "rect",
-        pointRadius: 2,
-        pointHoverRadius: 2,
-      },
+      // {
+      //   type: "line" as const,
+      //   label: "Dataset 1",
+      //   borderColor: "rgb(255, 99, 132)",
+      //   borderWidth: 2,
+      //   fill: false,
+      //   data: [60, 50, 100, 150],
+      //   pointStyle: "rect",
+      //   pointRadius: 2,
+      //   pointHoverRadius: 2,
+      //   xAxisID: "x2",
+      // },
       {
         type: "bar" as const,
         label: "Dataset 2",
@@ -271,6 +332,7 @@ function T1() {
 
   const options03 = {
     plugins: {
+      lineoffset: false,
       legend: {
         display: false,
         labels: {
@@ -584,6 +646,7 @@ function T1() {
                 borderColor: "#000",
                 borderStyle: "dashed",
                 opacity: 0,
+                zIndex: 1,
                 animation: "fadeIn 0.8s 0.5s forwards",
                 "@keyframes fadeIn": {
                   "0%": {
