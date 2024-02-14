@@ -36,47 +36,49 @@ import annotationPlugin from "chartjs-plugin-annotation";
 
 const lineoffset = {
   id: "lineoffset",
-  afterDraw: (chart: {
-    ctx: any;
-    data: { datasets: any };
-    scales: { x: any; y: any };
-  }) => {
-    const ctx = chart.ctx;
-    const datasets = chart.data.datasets;
-    const xAxis = chart.scales.x;
-    const yAxis = chart.scales.y;
+  // afterDraw: (chart: {
+  //   ctx: any;
+  //   data: { datasets: any };
+  //   scales: { x: any; y: any };
+  // }) => {
+  //   const ctx = chart.ctx;
+  //   const datasets = chart.data.datasets;
+  //   const xAxis = chart.scales.x;
+  //   const yAxis = chart.scales.y;
 
-    const datasetIndex = datasets.findIndex(
-      (dataset: { label: string }) => dataset.label === "Dataset 2"
-    );
-    const lineData = datasets[datasetIndex].data;
+  //   const datasetIndex = datasets.findIndex(
+  //     (dataset: { label: string }) => dataset.label === "Dataset 2"
+  //   );
+  //   [];
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgb(255, 99, 132)";
-    lineData.forEach((value: number, index: number) => {
-      const x = xAxis.getPixelForValue(index);
-      const y = yAxis.getPixelForValue(value);
-      if (index === 0) {
-        ctx.moveTo(x - 10, y);
-      } else {
-        ctx.lineTo(x - 10, y);
-      }
-    });
-    ctx.stroke();
+  //   const lineData = datasets[datasetIndex].data;
 
-    lineData.forEach((value: number, index: number) => {
-      const x = xAxis.getPixelForValue(index);
-      const y = yAxis.getPixelForValue(value);
-      ctx.beginPath();
-      ctx.arc(x - 10, y, 3, 0, 2 * Math.PI);
-      ctx.fillStyle = "rgb(255, 99, 132)";
-      ctx.fill();
-    });
+  //   ctx.save();
+  //   ctx.beginPath();
+  //   ctx.lineWidth = 2;
+  //   ctx.strokeStyle = "rgb(255, 99, 132)";
+  //   lineData.forEach((value: number, index: number) => {
+  //     const x = xAxis.getPixelForValue(index);
+  //     const y = yAxis.getPixelForValue(value);
+  //     if (index === 0) {
+  //       ctx.moveTo(x - 10, y);
+  //     } else {
+  //       ctx.lineTo(x - 10, y);
+  //     }
+  //   });
+  //   ctx.stroke();
 
-    ctx.restore();
-  },
+  //   lineData.forEach((value: number, index: number) => {
+  //     const x = xAxis.getPixelForValue(index);
+  //     const y = yAxis.getPixelForValue(value);
+  //     ctx.beginPath();
+  //     ctx.arc(x - 10, y, 3, 0, 2 * Math.PI);
+  //     ctx.fillStyle = "rgb(255, 99, 132)";
+  //     ctx.fill();
+  //   });
+
+  //   ctx.restore();
+  // },
 };
 
 ChartJS.register(
